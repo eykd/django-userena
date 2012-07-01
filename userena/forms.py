@@ -1,3 +1,4 @@
+from django.conf import settings
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate
@@ -12,7 +13,8 @@ import random
 
 attrs_dict = {'class': 'required'}
 
-USERNAME_RE = r'^[\.\w]+$'
+VALID_USERNAME_PATTERN = getattr(settings, 'USERENA_VALID_USERNAME_PATTERN', r'[\.\w]+')
+USERNAME_RE = r'^{username_p}$'.format(VALID_USERNAME_PATTERN)
 
 class SignupForm(forms.Form):
     """

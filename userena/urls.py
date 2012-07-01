@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls.defaults import *
 from django.views.generic.base import TemplateView
 from django.contrib.auth import views as auth_views
@@ -5,6 +6,15 @@ from django.contrib.auth.decorators import login_required
 
 from userena import views as userena_views
 from userena import settings as userena_settings
+
+
+VALID_USERNAME_PATTERN = getattr(settings, 'USERENA_VALID_USERNAME_PATTERN', r'[\.\w]+')
+
+
+def username_url(url, *args, **kwargs):
+    url = url.format(username_p=VALID_USERNAME_PATTERN)
+    return url(url, *args, **kwargs)
+
 
 urlpatterns = patterns('',
     # Signup, signin and signout
@@ -37,7 +47,7 @@ urlpatterns = patterns('',
        {'template_name': 'userena/password_reset_complete.html'}),
 
     # Signup
-    url(r'^(?P<username>[\.\w]+)/signup-complete/$',
+    username_url(r'^(?P<username>{username_p})/signup-complete/$',
        userena_views.direct_to_user_template,
        {'template_name': 'userena/signup_complete.html',
         'extra_context': {'userena_activation_required': userena_settings.USERENA_ACTIVATION_REQUIRED,
@@ -50,14 +60,14 @@ urlpatterns = patterns('',
        name='userena_activate'),
 
     # Change email and confirm it
-    url(r'^(?P<username>[\.\w]+)/edit/email/$',
+    username_url(r'^(?P<username>{username_p})/edit/email/$',
        userena_views.email_change,
        name='userena_email_change'),
-    url(r'^(?P<username>[\.\w]+)/edit/email/complete/$',
+    username_url(r'^(?P<username>{username_p})/edit/email/complete/$',
        userena_views.direct_to_user_template,
        {'template_name': 'userena/email_change_complete.html'},
        name='userena_email_change_complete'),
-    url(r'^(?P<username>[\.\w]+)/edit/email/confirmed/$',
+    username_url(r'^(?P<username>{username_p})/edit/email/confirmed/$',
        userena_views.direct_to_user_template,
        {'template_name': 'userena/email_confirm_complete.html'},
        name='userena_email_confirm_complete'),
@@ -66,27 +76,27 @@ urlpatterns = patterns('',
        name='userena_email_confirm'),
 
     # Disabled account
-    url(r'^(?P<username>[\.\w]+)/disabled/$',
+    username_url(r'^(?P<username>{username_p})/disabled/$',
        userena_views.direct_to_user_template,
        {'template_name': 'userena/disabled.html'},
        name='userena_disabled'),
 
     # Change password
-    url(r'^(?P<username>[\.\w]+)/edit/password/$',
+    username_url(r'^(?P<username>{username_p})/edit/password/$',
        userena_views.password_change,
        name='userena_password_change'),
-    url(r'^(?P<username>[\.\w]+)/edit/password/complete/$',
+    username_url(r'^(?P<username>{username_p})/edit/password/complete/$',
        userena_views.direct_to_user_template,
        {'template_name': 'userena/password_complete.html'},
        name='userena_password_change_complete'),
 
     # Edit profile
-    url(r'^(?P<username>[\.\w]+)/edit/$',
+    username_url(r'^(?P<username>{username_p})/edit/$',
        userena_views.profile_edit,
        name='userena_profile_edit'),
 
     # View profiles
-    url(r'^(?P<username>(?!signout|signup|signin)[\.\w]+)/$',
+    username_url(r'^(?P<username>{username_p})[\.\w]+)/$',
        userena_views.profile_detail,
        name='userena_profile_detail'),
     url(r'^page/(?P<page>[0-9]+)/$',
