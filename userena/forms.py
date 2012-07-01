@@ -16,6 +16,10 @@ attrs_dict = {'class': 'required'}
 VALID_USERNAME_PATTERN = getattr(settings, 'USERENA_VALID_USERNAME_PATTERN', r'[\.\w]+')
 USERNAME_RE = r'^{username_p}$'.format(VALID_USERNAME_PATTERN)
 
+INVALID_USERNAME_ERROR_MESSAGE = getattr(
+    settings, 'USERENA_INVALID_USERNAME_ERROR_MESSAGE',
+    _('Username must contain only letters, numbers, dots and underscores.'))
+
 class SignupForm(forms.Form):
     """
     Form for creating a new user account.
@@ -29,7 +33,7 @@ class SignupForm(forms.Form):
                                 max_length=30,
                                 widget=forms.TextInput(attrs=attrs_dict),
                                 label=_("Username"),
-                                error_messages={'invalid': _('Username must contain only letters, numbers, dots and underscores.')})
+                                error_messages={'invalid': INVALID_USERNAME_ERROR_MESSAGE})
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=75)),
                              label=_("Email"))
