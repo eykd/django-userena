@@ -11,9 +11,9 @@ from userena import settings as userena_settings
 VALID_USERNAME_PATTERN = getattr(settings, 'USERENA_VALID_USERNAME_PATTERN', r'[\.\w]+')
 
 
-def username_url(url, *args, **kwargs):
-    url = url.format(username_p=VALID_USERNAME_PATTERN)
-    return url(url, *args, **kwargs)
+def username_url(user_url, *args, **kwargs):
+    user_url = user_url.format(username_p=VALID_USERNAME_PATTERN)
+    return url(user_url, *args, **kwargs)
 
 
 urlpatterns = patterns('',
