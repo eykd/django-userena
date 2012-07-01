@@ -14,7 +14,7 @@ import random
 attrs_dict = {'class': 'required'}
 
 VALID_USERNAME_PATTERN = getattr(settings, 'USERENA_VALID_USERNAME_PATTERN', r'[\.\w]+')
-USERNAME_RE = r'^{username_p}$'.format(VALID_USERNAME_PATTERN)
+USERNAME_RE = r'^{}$'.format(VALID_USERNAME_PATTERN)
 
 INVALID_USERNAME_ERROR_MESSAGE = getattr(
     settings, 'USERENA_INVALID_USERNAME_ERROR_MESSAGE',
