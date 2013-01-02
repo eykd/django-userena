@@ -121,6 +121,7 @@ def signup(request, signup_form=SignupForm,
 
             # Send the signup complete signal
             userena_signals.signup_complete.send(sender=None,
+                                                 request=request,
                                                  user=user)
 
 
