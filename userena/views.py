@@ -128,9 +128,6 @@ def signup(request, signup_form=SignupForm,
             else: redirect_to = reverse('userena_signup_complete',
                                         kwargs={'username': user.username})
 
-            # A new signed user should logout the old one.
-            if request.user.is_authenticated():
-                logout(request)
             return redirect(redirect_to)
 
     if not extra_context: extra_context = dict()
